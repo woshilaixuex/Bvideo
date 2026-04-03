@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 基础颜色 -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- B站主题色 -->
+    <color name="primary">#FB7299</color> <!-- B站主色调：粉色 -->
+    <color name="primary_variant">#E65C82</color> <!-- 主色调变体 -->
+    <color name="secondary">#23ADE5</color> <!-- 辅助色：蓝色 -->
+    <color name="secondary_variant">#1A88C0</color> <!-- 辅助色变体 -->
+    
+    <!-- 背景色 -->
+    <color name="background">#F5F5F5</color> <!-- 浅色背景 -->
+    <color name="surface">#FFFFFF</color> <!-- 卡片背景 -->
+    
+    <!-- 文本色 -->
+    <color name="on_primary">#FFFFFF</color> <!-- 主色调上的文本 -->
+    <color name="on_secondary">#FFFFFF</color> <!-- 辅助色上的文本 -->
+    <color name="on_background">#333333</color> <!-- 背景上的文本 -->
+    <color name="on_surface">#333333</color> <!-- 卡片上的文本 -->
+    <color name="on_surface_variant">#666666</color> <!-- 次要文本 -->
+    
+    <!-- 其他 -->
+    <color name="error">#B00020</color> <!-- 错误色 -->
+    <color name="divider">#E0E0E0</color> <!-- 分割线 -->
+
+
+</resources>

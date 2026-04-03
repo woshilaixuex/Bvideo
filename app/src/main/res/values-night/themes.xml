@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BRedio" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 颜色配置 - 暗色模式 -->
+        <item name="colorPrimary">@color/primary</item> <!-- 保持主色调一致 -->
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="android:colorBackground">#121212</item> <!-- 深色背景 -->
+        <item name="colorSurface">#1E1E1E</item> <!-- 深色卡片 -->
+        <item name="colorError">#FF5252</item> <!-- 错误色 -->
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorOnBackground">@color/white</item> <!-- 深色背景上的文本 -->
+        <item name="colorOnSurface">@color/white</item> <!-- 深色卡片上的文本 -->
+        <item name="colorOnError">@color/white</item>
+        
+        <!-- 启动画面配置 -->
+<!--        <item name="android:windowSplashScreenBackground">@color/primary</item>-->
+<!--        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>-->
+<!--        <item name="android:windowSplashScreenAnimationDuration">1000</item>-->
+        
+        <!-- 其他配置 -->
+        <item name="android:windowBackground">#121212</item>
+        <item name="android:divider">#333333</item> <!-- 深色分割线 -->
+    </style>
+</resources>
