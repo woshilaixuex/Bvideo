@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.splashPage.SplashActivity"
-    android:background="@color/primary">
+    tools:context=".view.component.splashPage.SplashActivity"
+    android:background="?attr/android:colorBackground">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -16,7 +16,7 @@
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="?attr/colorOnPrimary"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

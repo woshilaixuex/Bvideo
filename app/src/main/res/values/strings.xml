@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">BRedio</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="service_agreement_title">用户协议</string>
+    <string name="service_agreement_confirm">我知道了</string>
+    <string name="disagreement">我不同意以上协议，突出应用</string>
+    <string name="service_agreement_content"><![CDATA[
+        欢迎使用 BRedio。为保证基础功能正常运行，请先阅读简版说明：
+        <br/><br/>
+        1. 应用会在你使用时处理必要的页面与播放数据。
+        <br/>
+        2. 继续使用即表示你同意基础服务规则与隐私说明。
+        <br/>
+        3. 详细内容可查看
+        <a href="https://www.baidu.com">《用户协议》</a>
+        与
+        <a href="https://www.baidu.com">《隐私政策》</a>。
+    ]]></string>
 </resources>

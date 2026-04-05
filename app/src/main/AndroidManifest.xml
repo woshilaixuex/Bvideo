@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BRedio">
         <activity
-            android:name=".view.splashPage.SplashActivity"
+            android:name=".view.component.splashPage.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

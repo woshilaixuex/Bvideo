@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".view.component.splashPage.ServiceAgreeDialogFragment">
+
+    <TextView
+        android:id="@+id/tvAgreementTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/service_agreement_title"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:id="@+id/svAgreementContent"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_marginTop="16dp"
+        android:fadeScrollbars="false"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarStyle="insideInset">
+
+        <TextView
+            android:id="@+id/tvAgreementContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="6dp"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="14sp"
+            tools:text="协议内容" />
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAgreementConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cornerRadius="16dp"
+        android:text="@string/service_agreement_confirm"
+        android:textColor="@android:color/white" />
+    <Button
+        android:id="@+id/btnDisagreementConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textColor="?attr/colorOnBackground"
+        android:text="@string/disagreement" />
+
+</LinearLayout>

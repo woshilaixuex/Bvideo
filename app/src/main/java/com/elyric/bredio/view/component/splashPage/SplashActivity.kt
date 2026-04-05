@@ -1,6 +1,5 @@
-package com.elyric.bredio.view.splashPage
+package com.elyric.bredio.view.component.splashPage
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -10,8 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.elyric.bredio.MainActivity
 import com.elyric.bredio.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +21,7 @@ class SplashActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        lifecycleScope.launch {
-            delay(2000)
-            goHome()
-        }
+
     }
 
     override fun onResume() {
@@ -36,4 +31,12 @@ class SplashActivity : AppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
+    private fun showServiceAgreementDialog(){
+        ServiceAgreeDialogFragment.show(supportFragmentManager) {
+
+        }
+    }
+
 }
+
+
