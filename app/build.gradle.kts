@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     // 添加对其他模块的依赖
     implementation(project(":common"))
+    implementation(project(":player"))
+    implementation(libs.androidx.media3.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

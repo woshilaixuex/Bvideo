@@ -10,9 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+    lateinit var btNavigation: BottomNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,13 +27,13 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//        // 初始化中间凸起按钮
-//        val fabCenter = findViewById<FloatingActionButton>(R.id.fabCenter)
-//        fabCenter.setOnClickListener {
-//            // 处理点击事件，例如打开发布页面
-//            Toast.makeText(this, "发布功能", Toast.LENGTH_SHORT).show()
-//        }
+        setupNavigationUI()
     }
 
+    private fun setupNavigationUI() {
+        btNavigation = findViewById(R.id.btNavigation)
+        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+        btNavigation.setupWithNavController(navController)
+    }
 
 }
