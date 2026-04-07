@@ -25,7 +25,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "BRedio"
 include(":app")
-include(":domain")
-include(":data")
 include(":common")
+include(":data")
+include(":domain")
 include(":player")

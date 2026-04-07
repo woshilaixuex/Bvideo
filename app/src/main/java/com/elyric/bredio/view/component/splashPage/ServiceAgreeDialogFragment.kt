@@ -41,7 +41,7 @@ class ServiceAgreeDialogFragment : BaseDialogFragment() {
         // 设置提示框合适宽高
         setDialogLayoutParams()
     }
-
+    // region 初始化
     override fun initViews() {
         super.initViews()
         isCancelable = false
@@ -53,6 +53,7 @@ class ServiceAgreeDialogFragment : BaseDialogFragment() {
         super.initListeners()
         contentTextView = requireView().findViewById(R.id.tvAgreementContent)
         contentTextView.text = BTextUtils.htmlResToSpanned(requireContext(), R.string.service_agreement_content)
+        contentTextView.setLinkTextColor(requireContext().getColor(R.color.primary))
         contentTextView.movementMethod = LinkMovementMethod.getInstance()
 
         btAgree.setOnClickListener {
@@ -63,7 +64,7 @@ class ServiceAgreeDialogFragment : BaseDialogFragment() {
             BProcessUtils.killApp()
         }
     }
-
+    // endregion
     fun setDialogLayoutParams(){
         val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
         val screenInfo = BWindowUtils.getScreenSize(requireContext())

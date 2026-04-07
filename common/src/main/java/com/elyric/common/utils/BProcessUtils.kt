@@ -9,4 +9,5 @@ object BProcessUtils {
     fun killApp(){
         Process.killProcess(Process.myPid())
     }
+
 }
