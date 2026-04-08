@@ -44,6 +44,8 @@ dependencies {
     // 添加对其他模块的依赖
     implementation(project(":common"))
     implementation(project(":player"))
+    // 媒体
+    implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.androidx.media3.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -12,7 +12,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="28dp"
         android:layout_height="wrap_content"
-        android:text="仿B站的APP"
+        android:text="Bo站APP"
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold"
