@@ -1,6 +1,6 @@
-package com.elyric.data.dto
+package com.elyric.domain.model
 
-data class VideoDto(
+data class Video(
     val id: String,
     val title: String,
     val description: String,

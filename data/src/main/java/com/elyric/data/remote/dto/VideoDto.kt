@@ -1,6 +1,6 @@
-package com.elyric.data.model
+package com.elyric.data.remote.dto
 
-data class VideoModel(
+data class VideoDto(
     val id: String,
     val title: String,
     val description: String,
