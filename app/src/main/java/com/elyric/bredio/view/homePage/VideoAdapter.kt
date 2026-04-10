@@ -11,22 +11,8 @@ import com.elyric.domain.model.Video
 
 class VideoAdapter: RecyclerView.Adapter<VideoHolder>() {
     private val videos = mutableListOf<Video>()
-
     fun updateVideos(newVideos: List<Video>) {
-        val diffCallback = object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = videos.size
-
-            override fun getNewListSize(): Int = newVideos.size
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return videos[oldItemPosition].id == newVideos[newItemPosition].id
-            }
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return videos[oldItemPosition] == newVideos[newItemPosition]
-            }
-        }
-
+        val diffCallback = VideoDiffCallBack(videos.toList(), newVideos)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         videos.clear()
         videos.addAll(newVideos)
@@ -56,4 +42,21 @@ class VideoAdapter: RecyclerView.Adapter<VideoHolder>() {
     }
 
     override fun getItemCount(): Int = videos.size
+}
+private class VideoDiffCallBack(
+    private val oldVideos: List<Video>,
+    private val newVideos: List<Video>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize(): Int = oldVideos.size
+
+    override fun getNewListSize(): Int = newVideos.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldVideos[oldItemPosition].id == newVideos[newItemPosition].id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldVideos[oldItemPosition] == newVideos[newItemPosition]
+    }
 }

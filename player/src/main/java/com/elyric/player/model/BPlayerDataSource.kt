@@ -1,6 +1,4 @@
-package com.elyric.player
-
-import android.R
+package com.elyric.player.model
 
 /**
  * 音视频数据类型

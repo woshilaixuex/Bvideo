@@ -1,4 +1,4 @@
-package com.elyric.player
+package com.elyric.player.engine
 
 /**
  * 将视频播放器抽离出来,支持自定义或者替换播放内核
