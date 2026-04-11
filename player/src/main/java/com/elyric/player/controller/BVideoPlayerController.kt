@@ -1,11 +1,12 @@
-package com.elyric.player.controller
 
 import android.content.Context
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.elyric.player.model.BPlayerDataSource
 import com.elyric.player.view.BPlayerView
 
+@UnstableApi
 class BVideoPlayerController(context: Context) {
     private val playerDataSource = BPlayerDataSource()
     private var attachedPlayerView: BPlayerView? = null

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.navigation.fragment.findNavController
 import com.elyric.bredio.R
@@ -16,7 +17,9 @@ class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: VideoAdapter
-
+    val videoViewModel: VideoViewModel by viewModels  {
+        VideoViewModel.Factory
+    }
 
     override fun initViews() {
         super.initViews()

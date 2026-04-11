@@ -1,4 +1,4 @@
-package com.elyric.player.engine
+package com.elyric.player.view
 
 import android.content.Context
 import android.util.AttributeSet
