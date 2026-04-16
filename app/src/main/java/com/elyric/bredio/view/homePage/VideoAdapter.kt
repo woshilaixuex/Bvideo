@@ -27,9 +27,12 @@ class VideoAdapter: RecyclerView.Adapter<VideoHolder>() {
         return VideoHolder(binding)
     }
 
+    /**
+     * payloads: MutableList<Any> 是与DiffUtil联动
+     */
     override fun onBindViewHolder(
         holder: VideoHolder,
-        position: Int
+        position: Int,
     ) {
         val video = videos[position]
         holder.binding.apply {

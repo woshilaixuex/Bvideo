@@ -1,40 +1,55 @@
+package com.elyric.player.controller
 
 import android.content.Context
-import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
-import com.elyric.player.model.BPlayerDataSource
+import androidx.media3.ui.PlayerView
+import com.elyric.player.engine.BExoPlayerEngine
 import com.elyric.player.view.BPlayerView
+import java.lang.ref.WeakReference
 
 @UnstableApi
 class BVideoPlayerController(context: Context) {
-    private val playerDataSource = BPlayerDataSource()
-    private var attachedPlayerView: BPlayerView? = null
-    val player = ExoPlayer.Builder(context.applicationContext).build()
+    private val engine = BExoPlayerEngine(context)
+    private var attachedPlayerViewRef: WeakReference<BPlayerView>? = null
 
     fun attach(playerView: BPlayerView) {
-        attachedPlayerView = playerView
-        playerView.bind(player)
+        val currentView = getAttachedPlayerView()
+        if (currentView === playerView) {
+            playerView.attachController(this)
+            return
+        }
+        currentView?.detachController()
+        if (currentView != null) {
+            PlayerView.switchTargetView(engine.player, currentView.getInnerView(), playerView.getInnerView())
+        } else {
+            playerView.bind(engine.player)
+        }
+        attachedPlayerViewRef = WeakReference(playerView)
+        playerView.attachController(this)
     }
 
     fun detach() {
-        attachedPlayerView?.unbind()
-        attachedPlayerView = null
+        getAttachedPlayerView()?.detachController()
+        getAttachedPlayerView()?.unbind()
+        attachedPlayerViewRef = null
     }
 
-    fun setSource(name: String, url: String) {
-        playerDataSource.setSource(name,url)
+    fun onPlayerViewDetached(playerView: BPlayerView) {
+        if (getAttachedPlayerView() !== playerView) {
+            return
+        }
+        playerView.detachController()
+        playerView.unbind()
+        attachedPlayerViewRef = null
     }
 
     fun setSource(url: String) {
-        setSource(url, url)
+        engine.setSource(url)
     }
 
     fun prepare() {
-        val url = playerDataSource.urlMap.values.firstOrNull() ?: return
-        val mediaItem = MediaItem.fromUri(url)
-        player.setMediaItem(mediaItem)
-        player.prepare()
+        engine.prepare()
     }
 
     fun play(url: String) {
@@ -44,23 +59,63 @@ class BVideoPlayerController(context: Context) {
     }
 
     fun start() {
-        player.play()
-    }
-
-    fun isPlaying(): Boolean {
-        return player.isPlaying
+        engine.play()
     }
 
     fun pause() {
-        player.pause()
+        engine.pause()
+    }
+
+    fun togglePlayPause() {
+        if (isPlaying()) {
+            pause()
+        } else {
+            start()
+        }
     }
 
     fun stop() {
-        player.stop()
+        engine.stop()
     }
 
     fun release() {
         detach()
-        player.release()
+        engine.release()
+    }
+
+    fun seekTo(positionMs: Long) {
+        engine.seekTo(positionMs)
+    }
+
+    fun setSpeed(speed: Float) {
+        engine.setSpeed(speed)
+    }
+
+    fun isPlaying(): Boolean {
+        return engine.isPlaying()
+    }
+
+    fun getDuration(): Long {
+        return engine.getDuration()
+    }
+
+    fun getCurrentPosition(): Long {
+        return engine.getCurrentPosition()
+    }
+
+    fun setVolume(volume: Float) {
+        engine.setVolume(volume)
+    }
+
+    fun addListener(listener: Player.Listener) {
+        engine.player.addListener(listener)
+    }
+
+    fun removeListener(listener: Player.Listener) {
+        engine.player.removeListener(listener)
+    }
+
+    private fun getAttachedPlayerView(): BPlayerView? {
+        return attachedPlayerViewRef?.get()
     }
 }

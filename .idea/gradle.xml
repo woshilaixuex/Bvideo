@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/player" />
+            <option value="$PROJECT_DIR$/plugin" />
           </set>
         </option>
       </GradleProjectSettings>
