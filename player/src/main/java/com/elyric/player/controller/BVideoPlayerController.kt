@@ -1,17 +1,21 @@
 package com.elyric.player.controller
 
 import android.content.Context
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.PlayerView
+import com.elyric.player.engine.BAndroidMediaPlayerEngine
 import com.elyric.player.engine.BExoPlayerEngine
+import com.elyric.player.engine.BPlayerListener
+import com.elyric.player.engine.VideoPlayerEngine
 import com.elyric.player.view.BPlayerView
 import java.lang.ref.WeakReference
 
 @UnstableApi
-class BVideoPlayerController(context: Context) {
-    private val engine = BExoPlayerEngine(context)
+class BVideoPlayerController(
+    private val engine: VideoPlayerEngine
+) {
     private var attachedPlayerViewRef: WeakReference<BPlayerView>? = null
+
+    constructor(context: Context) : this(BExoPlayerEngine(context))
 
     fun attach(playerView: BPlayerView) {
         val currentView = getAttachedPlayerView()
@@ -21,17 +25,18 @@ class BVideoPlayerController(context: Context) {
         }
         currentView?.detachController()
         if (currentView != null) {
-            PlayerView.switchTargetView(engine.player, currentView.getInnerView(), playerView.getInnerView())
+            engine.switchContainer(currentView.getRenderContainer(), playerView.getRenderContainer())
         } else {
-            playerView.bind(engine.player)
+            engine.attachToContainer(playerView.getRenderContainer())
         }
         attachedPlayerViewRef = WeakReference(playerView)
         playerView.attachController(this)
     }
 
     fun detach() {
-        getAttachedPlayerView()?.detachController()
-        getAttachedPlayerView()?.unbind()
+        val attachedView = getAttachedPlayerView()
+        attachedView?.detachController()
+        attachedView?.let { engine.detachFromContainer(it.getRenderContainer()) }
         attachedPlayerViewRef = null
     }
 
@@ -40,7 +45,7 @@ class BVideoPlayerController(context: Context) {
             return
         }
         playerView.detachController()
-        playerView.unbind()
+        engine.detachFromContainer(playerView.getRenderContainer())
         attachedPlayerViewRef = null
     }
 
@@ -107,15 +112,25 @@ class BVideoPlayerController(context: Context) {
         engine.setVolume(volume)
     }
 
-    fun addListener(listener: Player.Listener) {
-        engine.player.addListener(listener)
+    fun addListener(listener: BPlayerListener) {
+        engine.addListener(listener)
     }
 
-    fun removeListener(listener: Player.Listener) {
-        engine.player.removeListener(listener)
+    fun removeListener(listener: BPlayerListener) {
+        engine.removeListener(listener)
     }
 
     private fun getAttachedPlayerView(): BPlayerView? {
         return attachedPlayerViewRef?.get()
+    }
+
+    companion object {
+        fun createWithExo(context: Context): BVideoPlayerController {
+            return BVideoPlayerController(BExoPlayerEngine(context))
+        }
+
+        fun createWithMediaPlayer(context: Context): BVideoPlayerController {
+            return BVideoPlayerController(BAndroidMediaPlayerEngine(context))
+        }
     }
 }

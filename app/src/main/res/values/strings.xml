@@ -4,6 +4,12 @@
     <string name="home_search_hint">点击搜索视频、作者或关键词</string>
     <string name="search_page_title">搜索页</string>
     <string name="search_page_placeholder">这里后续接真实搜索结果</string>
+    <string name="splash_badge">BRedio</string>
+    <string name="splash_logo_mark">Bo</string>
+    <string name="splash_title">Bo站</string>
+    <string name="splash_subtitle">发现你想看的视频内容</string>
+    <string name="splash_description">首页、短视频与播放器正在就绪\n给你一个更顺手的视频浏览入口</string>
+    <string name="splash_loading">正在准备内容…</string>
     <string name="service_agreement_title">用户协议</string>
     <string name="service_agreement_confirm">我知道了</string>
     <string name="disagreement">我不同意以上协议，突出应用</string>

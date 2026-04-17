@@ -13,12 +13,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.ui.AspectRatioFrameLayout
-import androidx.media3.ui.PlayerView
-import com.elyric.player.controller.BVideoPlayerController
 import com.elyric.player.R
+import com.elyric.player.controller.BVideoPlayerController
+import com.elyric.player.engine.BPlayerListener
+import com.elyric.player.engine.BPlayerPlaybackState
 
 @UnstableApi
 class BPlayerView @JvmOverloads constructor(
@@ -26,13 +25,11 @@ class BPlayerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+    private val renderContainer = FrameLayout(context).apply {
+        layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
+    }
     private val topControls = LayoutInflater.from(context).inflate(R.layout.view_player_top_controls, this, false)
     private val bottomControls = LayoutInflater.from(context).inflate(R.layout.view_player_bottom_controls, this, false)
-    private val innerPlayerView = PlayerView(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-        useController = false
-    }
     private val backButton: ImageView = topControls.findViewById(R.id.ivBack)
     private val moreButton: ImageView = topControls.findViewById(R.id.ivMore)
     private val playButton: ImageView = bottomControls.findViewById(R.id.ivPlay)
@@ -56,16 +53,24 @@ class BPlayerView @JvmOverloads constructor(
             }
         }
     }
-    private val playerListener = object : Player.Listener {
-        override fun onPlaybackStateChanged(playbackState: Int) {
+    private val playerListener = object : BPlayerListener {
+        override fun onPlaybackStateChanged(state: BPlayerPlaybackState) {
             updatePlayButton()
             updateProgress()
-            if (playbackState == Player.STATE_READY && controller?.isPlaying() == true) {
-                scheduleAutoHide()
-            }
-            if (playbackState == Player.STATE_ENDED) {
-                showControls()
-                cancelAutoHide()
+            when (state) {
+                BPlayerPlaybackState.READY -> {
+                    if (controller?.isPlaying() == true) {
+                        scheduleAutoHide()
+                    }
+                }
+
+                BPlayerPlaybackState.ENDED,
+                BPlayerPlaybackState.ERROR -> {
+                    showControls()
+                    cancelAutoHide()
+                }
+
+                else -> Unit
             }
         }
 
@@ -75,6 +80,7 @@ class BPlayerView @JvmOverloads constructor(
                 startProgressUpdates()
                 scheduleAutoHide()
             } else {
+                stopProgressUpdates()
                 cancelAutoHide()
             }
         }
@@ -84,23 +90,15 @@ class BPlayerView @JvmOverloads constructor(
         clipChildren = false
         clipToPadding = false
 
-        addView(innerPlayerView, LayoutParams(MATCH_PARENT, MATCH_PARENT))
+        addView(renderContainer, LayoutParams(MATCH_PARENT, MATCH_PARENT))
         addView(topControls, buildOverlayLayoutParams(Gravity.TOP))
         addView(bottomControls, buildOverlayLayoutParams(Gravity.BOTTOM))
         hideControls()
         bindControlEvents()
     }
 
-    fun bind(player: Player?) {
-        innerPlayerView.player = player
-    }
-
-    fun unbind() {
-        innerPlayerView.player = null
-    }
-
-    fun setUseController(useController: Boolean) {
-        innerPlayerView.useController = useController
+    fun getRenderContainer(): FrameLayout {
+        return renderContainer
     }
 
     fun attachController(controller: BVideoPlayerController) {
@@ -161,10 +159,6 @@ class BPlayerView @JvmOverloads constructor(
 
     fun setOnMoreClickListener(listener: OnClickListener?) {
         onMoreClickListener = listener
-    }
-
-    fun getInnerView(): PlayerView {
-        return innerPlayerView
     }
 
     override fun onDetachedFromWindow() {
