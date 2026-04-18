@@ -24,8 +24,8 @@ class HomeFragment : BaseFragment() {
     override fun initViews() {
         super.initViews()
         adapter = VideoAdapter()
-        binding.rvHome.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rvHome.adapter = adapter
+//        binding.rvHome.layoutManager = GridLayoutManager(requireContext(), 2)
+//        binding.rvHome.adapter = adapter
     }
 
     override fun initDatum() {

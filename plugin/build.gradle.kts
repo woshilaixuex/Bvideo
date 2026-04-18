@@ -1,40 +1,30 @@
 plugins {
-    alias(libs.plugins.android.library)
+    `java-gradle-plugin`
+    `kotlin-dsl`
 }
 
-android {
-    namespace = "com.elyric.plugin"
-    compileSdk {
-        version = release(36)
+group = "com.elyric.plugin"
+version = "1.0.0-SNAPSHOT"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
+}
 
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+gradlePlugin {
+    plugins {
+        create("navPlugin") {
+            id = "com.elyric.nav-plugin"
+            implementationClass = "com.elyric.plugin.nav_plugin.NavPlugin"
+            displayName = "Elyric Navigation Plugin"
+            description = "Custom Gradle plugin for BRedio navigation-related build logic."
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(gradleApi())
+    implementation(androidxLibs.bundles.nav.plugin)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

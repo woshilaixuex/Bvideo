@@ -21,6 +21,16 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs{
+        create("androidxLibs") {
+            library("asm","org.ow2.asm","asm").version("9.2")
+            library("asm-tree","org.ow2.asm","asm-tree").version("9.2")
+            library("commons-io","commons-io","commons-io").version("2.6")
+            library("kotlinpoet","com.squareup","kotlinpoet").version("1.12.0")
+            library("agp","com.android.tools.build","gradle").version("9.0.1")
+            bundle("nav-plugin", listOf("asm","asm-tree","commons-io","kotlinpoet","agp"))
+        }
+    }
 }
 
 rootProject.name = "BRedio"
