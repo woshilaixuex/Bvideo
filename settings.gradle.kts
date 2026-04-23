@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -14,6 +15,8 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+        mavenLocal()
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://maven.aliyun.com/repository/central") }
         maven { url = uri("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
@@ -40,3 +43,4 @@ include(":data")
 include(":domain")
 include(":player")
 include(":plugin")
+include(":nav-api")
