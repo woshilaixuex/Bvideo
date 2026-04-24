@@ -2,6 +2,7 @@ package com.elyric.plugin.nav_plugin.scan
 
 import com.elyric.nav_api.NavData
 import com.elyric.nav_api.NavType
+import com.elyric.plugin.nav_plugin.model.NavDestinationStore
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -23,7 +24,6 @@ class NavClassVisitor(
     private var internalClassName: String = ""
     private var route: String? = null
     private var navType: NavType? = null
-    private val navDatas = mutableListOf<NavData>()
 
     override fun visit(
         version: Int,
@@ -72,7 +72,7 @@ class NavClassVisitor(
                 navType = navType
             )
             println("NavPlugin found destination: $navData")
-            navDatas.add(navData)
+            NavDestinationStore.add(navData)
         }
         super.visitEnd()
     }

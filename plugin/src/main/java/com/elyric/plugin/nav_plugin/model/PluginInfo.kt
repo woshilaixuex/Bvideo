@@ -9,5 +9,5 @@ object PluginInfo {
     const val NAV_API_PACKAGE_NAME = "com.elyric.nav_api"
     const val NAV_REGISTRY_NAME = "NavRegistry"
     const val NAV_RUNTIME_NAV_DATA_CLASS_NAME: String = "NavData"
-    const val NAV_RUNTIME_MODULE_NAME: String = ":nav-api"
+    const val NAV_RUNTIME_MODULE_NAME: String = "generated/source/navRegistry"
 }

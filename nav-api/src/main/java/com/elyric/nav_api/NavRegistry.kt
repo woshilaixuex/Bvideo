@@ -1,6 +1,6 @@
 package com.elyric.nav_api
 
-class NavRegistry {
+object NavRegistry {
     private val destinations = mutableListOf<NavData>()
     init {
 

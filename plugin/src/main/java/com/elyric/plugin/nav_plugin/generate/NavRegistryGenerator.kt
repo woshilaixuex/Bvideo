@@ -2,6 +2,7 @@ package com.elyric.plugin.nav_plugin.generate
 
 import com.elyric.nav_api.NavData
 import com.elyric.nav_api.NavType
+import com.elyric.plugin.nav_plugin.model.NavDestinationStore
 import com.elyric.plugin.nav_plugin.model.PluginInfo
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -19,13 +20,13 @@ import org.gradle.api.tasks.SourceSetContainer
 import kotlin.collections.forEach
 
 class NavRegistryGenerator(private val project: Project){
-    fun generateNavRegistry(destinations: List<NavData>) {
+    fun generateNavRegistry() {
         val navDataClassName = ClassName(PluginInfo.NAV_API_PACKAGE_NAME, "NavData")
         val navTypeClassName = ClassName(PluginInfo.NAV_API_PACKAGE_NAME, "NavType")
         val destinationsType = MUTABLE_LIST.parameterizedBy(navDataClassName)
         val returnType = LIST.parameterizedBy(navDataClassName)
         val initBlock = CodeBlock.builder().apply {
-            destinations.forEach { destination ->
+            NavDestinationStore.navDatas.forEach { destination ->
                 addStatement(
                     "destinations.add(%T(route = %S, className = %S, navType = %T.%L))",
                     navDataClassName,
@@ -65,5 +66,7 @@ class NavRegistryGenerator(private val project: Project){
         val outputFileDir = sourceSet.first().java.srcDirs.first().absoluteFile
         println("NavRegistryGenerator outputFileDir:${outputFileDir.absolutePath}")
         fileSpec.writeTo(outputFileDir)
+        // 清除注解临时信息
+        NavDestinationStore.clear()
     }
 }

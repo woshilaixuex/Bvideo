@@ -52,8 +52,9 @@ dependencies {
     // 媒体
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.androidx.media3.ui)
+    //
+    implementation("com.elyric.nav:nav-api:1.0.0-SNAPSHOT")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(project(":nav-api"))
 }
