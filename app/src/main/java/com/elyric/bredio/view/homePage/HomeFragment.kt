@@ -11,8 +11,11 @@ import com.elyric.bredio.R
 import com.elyric.bredio.databinding.FragmentHomeBinding
 import com.elyric.bredio.view.component.fragment.BaseFragment
 import com.elyric.domain.model.Video
+import com.elyric.nav_api.NavDestination
+import com.elyric.nav_api.NavType
+import com.elyric.bredio.view.videoPage.VideoFragment
 
-
+@NavDestination(route = "home_fragment", type = NavType.FRAGMENT, asStart = true)
 class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -23,9 +26,9 @@ class HomeFragment : BaseFragment() {
 
     override fun initViews() {
         super.initViews()
-        adapter = VideoAdapter()
-//        binding.rvHome.layoutManager = GridLayoutManager(requireContext(), 2)
-//        binding.rvHome.adapter = adapter
+        adapter = VideoAdapter(::openVideoDetail)
+        binding.homeContent.rvHome.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.homeContent.rvHome.adapter = adapter
     }
 
     override fun initDatum() {
@@ -54,6 +57,13 @@ class HomeFragment : BaseFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun openVideoDetail(video: Video) {
+        findNavController().navigate(
+            VideoFragment.ROUTE.hashCode(),
+            VideoFragment.createArgs(video)
+        )
     }
 
     private fun buildMockVideos(): List<Video> {

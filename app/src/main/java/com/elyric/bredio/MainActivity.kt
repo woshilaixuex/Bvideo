@@ -12,13 +12,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.elyric.bredio.view.component.navigation.NavGraphBuilder
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
-    lateinit var btNavigation: BottomNavigationView
+//    lateinit var btNavigation: BottomNavigationView
+    private val navController by lazy { (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,9 +43,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigationUI() {
-        btNavigation = findViewById(R.id.btNavigation)
-        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-        btNavigation.setupWithNavController(navController)
+//        btNavigation = findViewById(R.id.btNavigation)
+//        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+//        btNavigation.setupWithNavController(navController)
+        NavGraphBuilder.build(navController,this)
     }
 
 }

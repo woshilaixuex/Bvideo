@@ -16,22 +16,23 @@ object NavGraphBuilder {
         val provider = controller.navigatorProvider
         val navigator = provider.getNavigator<NavGraphNavigator>("navigation")
         val navGraph = navigator.createDestination()
+        val destinations = NavRegistry.get()
+        var startDestinationId: Int? = null
 
-        val iterator = NavRegistry.get().iterator()
-        while (iterator.hasNext()) {
-            val navData = iterator.next()
+        destinations.forEach { navData ->
+            val destinationId = navData.route.hashCode()
             when (navData.navType) {
                 NavType.ACTIVITY -> {
                     val navigator = provider.get<ActivityNavigator>("activity")
                     val destination = navigator.createDestination()
-                    destination.id = navData.route.hashCode()
+                    destination.id = destinationId
                     destination.setComponentName(ComponentName(context, navData.className))
                     navGraph.addDestination(destination)
                 }
                 NavType.FRAGMENT -> {
                     val navigator = provider.get<FragmentNavigator>("fragment")
                     val destination = navigator.createDestination()
-                    destination.id = navData.route.hashCode()
+                    destination.id = destinationId
                     destination.setClassName(navData.className)
                     navGraph.addDestination(destination)
                 }
@@ -39,7 +40,7 @@ object NavGraphBuilder {
                 NavType.DIALOG -> {
                     val navigator = provider.get<DialogFragmentNavigator>("dialog")
                     val destination = navigator.createDestination()
-                    destination.id = navData.route.hashCode()
+                    destination.id = destinationId
                     destination.setClassName(navData.className)
                     navGraph.addDestination(destination)
                 }
@@ -47,10 +48,14 @@ object NavGraphBuilder {
                     throw IllegalArgumentException("NavigatorProvider:NavType not found")
                 }
             }
-            navGraph.setStartDestination(navData.route.hashCode())
+            if (navData.asStart && startDestinationId == null) {
+                startDestinationId = destinationId
+            }
         }
-        controller.graph = navGraph
+        val rootStartDestination = startDestinationId
+            ?: destinations.firstOrNull()?.route?.hashCode()
+            ?: throw IllegalStateException("NavGraphBuilder: no destinations found in NavRegistry")
+        navGraph.setStartDestination(rootStartDestination)
+        controller.setGraph(navGraph,null)
     }
-
-
 }

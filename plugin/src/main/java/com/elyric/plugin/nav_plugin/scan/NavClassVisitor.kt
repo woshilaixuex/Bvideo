@@ -3,6 +3,13 @@ package com.elyric.plugin.nav_plugin.scan
 import com.elyric.nav_api.NavData
 import com.elyric.nav_api.NavType
 import com.elyric.plugin.nav_plugin.model.NavDestinationStore
+import com.elyric.plugin.nav_plugin.model.PluginInfo
+import com.elyric.plugin.nav_plugin.model.PluginInfo.KEY_AS_START
+import com.elyric.plugin.nav_plugin.model.PluginInfo.KEY_ROUTE
+import com.elyric.plugin.nav_plugin.model.PluginInfo.NAV_API_PACKAGE_NAME
+import com.elyric.plugin.nav_plugin.model.PluginInfo.NAV_DESTINATION_TYPE
+import com.elyric.plugin.nav_plugin.model.PluginInfo.NAV_DESTINATION_DESCRIPTOR
+import com.elyric.plugin.nav_plugin.model.PluginInfo.NAV_REGISTRY_NAME
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
@@ -24,6 +31,7 @@ class NavClassVisitor(
     private var internalClassName: String = ""
     private var route: String? = null
     private var navType: NavType? = null
+    private var asStart:Boolean = false
 
     override fun visit(
         version: Int,
@@ -47,6 +55,7 @@ class NavClassVisitor(
             override fun visit(name: String?, value: Any?) {
                 when (name) {
                     KEY_ROUTE -> route = value as? String
+                    KEY_AS_START -> asStart = value as Boolean
                 }
                 super.visit(name, value)
             }
@@ -65,11 +74,13 @@ class NavClassVisitor(
     override fun visitEnd() {
         val route = route
         val navType = navType
+        val asStart = asStart
         if (!route.isNullOrBlank() && navType != null) {
             val navData = NavData(
                 route = route,
                 className = internalClassName.replace('/', '.'),
-                navType = navType
+                navType = navType,
+                asStart = asStart
             )
             println("NavPlugin found destination: $navData")
             NavDestinationStore.add(navData)
@@ -114,13 +125,7 @@ class NavClassVisitor(
     }
 
     private companion object {
-        const val NAV_DESTINATION_DESCRIPTOR = "Lcom/elyric/nav_api/NavDestination;"
-        const val NAV_DESTINATION_TYPE = "Lcom/elyric/nav_api/NavType;"
-        private const val KEY_ROUTE = "route"
-        private const val KEY_TYPE = "type"
 
-        private const val NAV_API_PACKAGE_NAME = "com.elyric.nav_api"
-        private const val NAV_REGISTRY_NAME = "NavRegistry"
     }
 
 }

@@ -9,8 +9,11 @@ import com.elyric.bredio.R
 import com.elyric.bredio.databinding.ItemHomeBinding
 import com.elyric.domain.model.Video
 
-class VideoAdapter: RecyclerView.Adapter<VideoHolder>() {
+class VideoAdapter(
+    private val onVideoClick: (Video) -> Unit
+) : RecyclerView.Adapter<VideoHolder>() {
     private val videos = mutableListOf<Video>()
+
     fun updateVideos(newVideos: List<Video>) {
         val diffCallback = VideoDiffCallBack(videos.toList(), newVideos)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -41,6 +44,9 @@ class VideoAdapter: RecyclerView.Adapter<VideoHolder>() {
                 .load(video.coverUrl)
                 .placeholder(R.drawable.loading)
                 .into(coverImage)
+            root.setOnClickListener {
+                onVideoClick(video)
+            }
         }
     }
 

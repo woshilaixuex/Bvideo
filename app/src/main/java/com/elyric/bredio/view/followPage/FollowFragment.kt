@@ -10,7 +10,7 @@ import com.elyric.nav_api.NavDestination
 import com.elyric.nav_api.NavType
 
 
-@NavDestination(route = "follow", type = NavType.FRAGMENT)
+@NavDestination(route = "follow_fragment", type = NavType.FRAGMENT)
 class FollowFragment : Fragment() {
 
 

@@ -1,60 +1,88 @@
 package com.elyric.bredio.view.videoPage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.elyric.bredio.R
+import androidx.annotation.OptIn
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.media3.common.util.UnstableApi
+import com.elyric.bredio.databinding.FragmentVideoBinding
+import com.elyric.domain.model.Video
+import com.elyric.nav_api.NavDestination
+import com.elyric.nav_api.NavType
+import com.elyric.player.controller.BVideoPlayerController
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [VideoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@OptIn(UnstableApi::class)
+@NavDestination(route = VideoFragment.ROUTE, type = NavType.FRAGMENT)
 class VideoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentVideoBinding? = null
+    private val binding get() = _binding!!
+    private var playerController: BVideoPlayerController? = null
+    private lateinit var currentVideo: Video
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        currentVideo = Video(
+            id = requireArguments().getString(ARG_VIDEO_ID).orEmpty(),
+            title = requireArguments().getString(ARG_VIDEO_TITLE).orEmpty(),
+            description = requireArguments().getString(ARG_VIDEO_DESCRIPTION).orEmpty(),
+            coverUrl = "",
+            playUrl = requireArguments().getString(ARG_VIDEO_PLAY_URL).orEmpty().ifBlank { DEFAULT_PLAY_URL }
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video, container, false)
+    ): View {
+        _binding = FragmentVideoBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.tvVideoTitle.text = currentVideo.title
+        binding.tvVideoDescription.text = currentVideo.description
+
+        playerController = BVideoPlayerController(requireContext()).also { controller ->
+            controller.attach(binding.videoPlayer)
+            controller.play(currentVideo.playUrl)
+        }
+
+        binding.videoPlayer.setOnBackClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    override fun onStop() {
+        playerController?.pause()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        playerController?.release()
+        playerController = null
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment VideoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            VideoFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        const val ROUTE = "video_fragment"
+        const val ARG_VIDEO_ID = "arg_video_id"
+        const val ARG_VIDEO_TITLE = "arg_video_title"
+        const val ARG_VIDEO_DESCRIPTION = "arg_video_description"
+        const val ARG_VIDEO_PLAY_URL = "arg_video_play_url"
+        const val DEFAULT_PLAY_URL = "https://www.w3schools.com/html/mov_bbb.mp4"
+
+        fun createArgs(video: Video): Bundle {
+            return Bundle().apply {
+                putString(ARG_VIDEO_ID, video.id)
+                putString(ARG_VIDEO_TITLE, video.title)
+                putString(ARG_VIDEO_DESCRIPTION, video.description)
+                putString(ARG_VIDEO_PLAY_URL, video.playUrl.ifBlank { DEFAULT_PLAY_URL })
             }
+        }
     }
 }

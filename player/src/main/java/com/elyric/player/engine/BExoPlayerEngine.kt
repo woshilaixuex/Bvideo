@@ -3,18 +3,41 @@ package com.elyric.player.engine
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
+import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 
 @UnstableApi
 class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
-    private val player = ExoPlayer.Builder(context.applicationContext).build()
+    private val appContext = context.applicationContext
+    private val trackSelector = DefaultTrackSelector(appContext).apply {
+        parameters = buildUponParameters()
+            .setAllowVideoMixedMimeTypeAdaptiveness(true)
+            .setAllowVideoNonSeamlessAdaptiveness(true)
+            .build()
+    }
+    private val loadControl = DefaultLoadControl.Builder()
+        .setBufferDurationsMs(
+            MIN_BUFFER_MS,
+            MAX_BUFFER_MS,
+            BUFFER_FOR_PLAYBACK_MS,
+            BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
+        )
+        .build()
+    private val player = ExoPlayer.Builder(appContext)
+        .setTrackSelector(trackSelector)
+        .setLoadControl(loadControl)
+        .build().apply {
+            videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+        }
     private var currentUrl: String? = null
     private var renderView: PlayerView? = null
     private val playerListener = object : Player.Listener {
@@ -74,11 +97,16 @@ class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
     override fun prepare() {
         val source = currentUrl ?: return
         dispatchPlaybackState(BPlayerPlaybackState.PREPARING)
+        player.playWhenReady = true
         player.setMediaItem(MediaItem.fromUri(source))
         player.prepare()
     }
 
     override fun play() {
+        if (player.playbackState == Player.STATE_IDLE && currentUrl != null) {
+            prepare()
+            return
+        }
         player.play()
     }
 
@@ -133,6 +161,7 @@ class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
             )
             resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             useController = false
+            setKeepContentOnPlayerReset(true)
             player = this@BExoPlayerEngine.player
         }
     }
@@ -147,5 +176,12 @@ class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
             container.removeAllViews()
         }
         container.addView(view)
+    }
+
+    private companion object {
+        const val MIN_BUFFER_MS = 2_500
+        const val MAX_BUFFER_MS = 10_000
+        const val BUFFER_FOR_PLAYBACK_MS = 250
+        const val BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 500
     }
 }

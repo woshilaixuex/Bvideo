@@ -1,0 +1,47 @@
+{
+  "activeColor": "#EC6399",
+  "inActiveColor": "#666666",
+  "selectTab": 0,
+  "tabs": [
+    {
+      "size": 24,
+      "enable": true,
+      "index": 0,
+      "route": "home_fragment",
+      "title": "首页",
+      "icon": "ic_video"
+    },
+    {
+      "size": 24,
+      "enable": true,
+      "index": 1,
+      "route": "short_video_fragment",
+      "title": "短视频",
+      "icon": "ic_short_video"
+    },
+    {
+      "size": 50,
+      "enable": true,
+      "index": 2,
+      "route": "",
+      "title": "添加",
+      "icon": ""
+    },
+    {
+      "size": 24,
+      "enable": true,
+      "index": 3,
+      "route": "follow_fragment",
+      "title": "动态",
+      "icon": "ic_follow"
+    },
+    {
+      "size": 24,
+      "enable": true,
+      "index": 4,
+      "route": "user_fragment",
+      "title": "我的",
+      "icon": "ic_user"
+    }
+  ]
+}

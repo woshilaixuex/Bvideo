@@ -1,7 +1,5 @@
 package com.elyric.plugin.nav_plugin.generate
 
-import com.elyric.nav_api.NavData
-import com.elyric.nav_api.NavType
 import com.elyric.plugin.nav_plugin.model.NavDestinationStore
 import com.elyric.plugin.nav_plugin.model.PluginInfo
 import com.squareup.kotlinpoet.ClassName
@@ -14,13 +12,11 @@ import com.squareup.kotlinpoet.MUTABLE_LIST
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.gradle.api.GradleException
-import org.gradle.api.Project
-import org.gradle.api.tasks.SourceSetContainer
+import java.io.File
 import kotlin.collections.forEach
 
-class NavRegistryGenerator(private val project: Project){
-    fun generateNavRegistry() {
+class NavRegistryGenerator {
+    fun generateNavRegistry(outputDir: File) {
         val navDataClassName = ClassName(PluginInfo.NAV_API_PACKAGE_NAME, "NavData")
         val navTypeClassName = ClassName(PluginInfo.NAV_API_PACKAGE_NAME, "NavType")
         val destinationsType = MUTABLE_LIST.parameterizedBy(navDataClassName)
@@ -28,12 +24,13 @@ class NavRegistryGenerator(private val project: Project){
         val initBlock = CodeBlock.builder().apply {
             NavDestinationStore.navDatas.forEach { destination ->
                 addStatement(
-                    "destinations.add(%T(route = %S, className = %S, navType = %T.%L))",
+                    "destinations.add(%T(route = %S,\n className = %S,\n navType = %T.%L,\n asStart = %L))",
                     navDataClassName,
                     destination.route,
                     destination.className,
                     navTypeClassName,
-                    destination.navType.name
+                    destination.navType.name,
+                    destination.asStart
                 )
             }
         }.build()
@@ -55,18 +52,10 @@ class NavRegistryGenerator(private val project: Project){
             .addFunction(getFunction)
             .build()
 
-        val fileSpec =
-            FileSpec.builder(PluginInfo.NAV_API_PACKAGE_NAME, PluginInfo.NAV_REGISTRY_NAME)
-                .addType(typeSpec)
-                .build()
-        val runtimeProject = project.rootProject.findProject(PluginInfo.NAV_RUNTIME_MODULE_NAME)
-            ?: throw GradleException("NavRegistryGenerator: navRuntime project not found ${PluginInfo.NAV_RUNTIME_MODULE_NAME}")
-
-        val sourceSet = runtimeProject.extensions.findByName("sourceSets") as SourceSetContainer
-        val outputFileDir = sourceSet.first().java.srcDirs.first().absoluteFile
-        println("NavRegistryGenerator outputFileDir:${outputFileDir.absolutePath}")
-        fileSpec.writeTo(outputFileDir)
-        // 清除注解临时信息
+        FileSpec.builder(PluginInfo.NAV_API_PACKAGE_NAME, PluginInfo.NAV_REGISTRY_NAME)
+            .addType(typeSpec)
+            .build()
+            .writeTo(outputDir)
         NavDestinationStore.clear()
     }
 }

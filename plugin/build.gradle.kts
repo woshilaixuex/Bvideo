@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.elyric.plugin"
-version = "1.0.1"
+version = "1.0.3"
 
 java {
     toolchain {
@@ -42,6 +42,7 @@ publishing {
 dependencies {
     implementation(gradleApi())
     implementation(androidxLibs.bundles.nav.plugin)
-    implementation("com.elyric.nav:nav-api:1.0.0-SNAPSHOT")
+    implementation(project(":nav-api"))
+    implementation("com.google.devtools.ksp:symbol-processing-api:2.2.10-2.0.2")
     testImplementation(libs.junit)
 }

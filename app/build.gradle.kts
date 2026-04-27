@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("com.elyric.nav-plugin") version "1.0.1"
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -52,8 +52,12 @@ dependencies {
     // 媒体
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.androidx.media3.ui)
-    //
-    implementation("com.elyric.nav:nav-api:1.0.0-SNAPSHOT")
+    // nav-plugin
+    implementation(project(":nav-api"))
+    ksp(project(":plugin"))
+    // 序列化以及json解析
+    implementation("com.alibaba.fastjson2:fastjson2:2.0.58.android8")
+    // 测试
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
