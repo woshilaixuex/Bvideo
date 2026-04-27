@@ -5,21 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.media3.common.util.UnstableApi
 import com.elyric.bredio.databinding.FragmentVideoBinding
+import com.elyric.bredio.view.component.player.GlobalPlayerViewModel
 import com.elyric.domain.model.Video
 import com.elyric.nav_api.NavDestination
 import com.elyric.nav_api.NavType
-import com.elyric.player.controller.BVideoPlayerController
 
 @OptIn(UnstableApi::class)
 @NavDestination(route = VideoFragment.ROUTE, type = NavType.FRAGMENT)
 class VideoFragment : Fragment() {
     private var _binding: FragmentVideoBinding? = null
     private val binding get() = _binding!!
-    private var playerController: BVideoPlayerController? = null
+    private val globalPlayerViewModel: GlobalPlayerViewModel by activityViewModels()
     private lateinit var currentVideo: Video
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +47,7 @@ class VideoFragment : Fragment() {
         binding.tvVideoTitle.text = currentVideo.title
         binding.tvVideoDescription.text = currentVideo.description
 
-        playerController = BVideoPlayerController(requireContext()).also { controller ->
-            controller.attach(binding.videoPlayer)
-            controller.play(currentVideo.playUrl)
-        }
+        globalPlayerViewModel.play(binding.videoPlayer, currentVideo.playUrl)
 
         binding.videoPlayer.setOnBackClickListener {
             findNavController().popBackStack()
@@ -57,13 +55,12 @@ class VideoFragment : Fragment() {
     }
 
     override fun onStop() {
-        playerController?.pause()
+        globalPlayerViewModel.pause()
         super.onStop()
     }
 
     override fun onDestroyView() {
-        playerController?.release()
-        playerController = null
+        globalPlayerViewModel.detach()
         _binding = null
         super.onDestroyView()
     }
