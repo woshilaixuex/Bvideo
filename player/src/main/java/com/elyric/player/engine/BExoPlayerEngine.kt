@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.media3.common.C
-import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.PlaybackException
@@ -14,6 +13,7 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import com.elyric.player.data.BPlayerCacheStore
 
 @UnstableApi
 class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
@@ -98,7 +98,7 @@ class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
         val source = currentUrl ?: return
         dispatchPlaybackState(BPlayerPlaybackState.PREPARING)
         player.playWhenReady = true
-        player.setMediaItem(MediaItem.fromUri(source))
+        player.setMediaSource(BPlayerCacheStore.createMediaSource(appContext, source))
         player.prepare()
     }
 

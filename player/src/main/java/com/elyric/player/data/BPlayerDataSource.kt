@@ -1,4 +1,4 @@
-package com.elyric.player.model
+package com.elyric.player.data
 
 /**
  * 音视频数据类型
