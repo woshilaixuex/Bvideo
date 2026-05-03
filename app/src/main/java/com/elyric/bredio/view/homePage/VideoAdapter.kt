@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.elyric.bredio.R
 import com.elyric.bredio.databinding.ItemHomeBinding
 import com.elyric.domain.model.Video
@@ -42,6 +43,7 @@ class VideoAdapter(
             videoTitle.text = video.title
             Glide.with(coverImage)
                 .load(video.coverUrl)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .placeholder(R.drawable.loading)
                 .into(coverImage)
             root.setOnClickListener {

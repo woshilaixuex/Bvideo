@@ -19,6 +19,9 @@ import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 @UnstableApi
 object BPlayerCacheStore {
@@ -30,6 +33,11 @@ object BPlayerCacheStore {
     @Volatile
     private var simpleCache: SimpleCache? = null
     private val preloadExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val _preloadEvents = MutableSharedFlow<BPlayerPreloadState>(
+        replay = 1,
+        extraBufferCapacity = 64
+    )
+    val preloadEvents: SharedFlow<BPlayerPreloadState> = _preloadEvents.asSharedFlow()
 
     fun createMediaSource(context: Context, url: String): MediaSource {
         return ProgressiveMediaSource.Factory(createCacheDataSourceFactory(context))
@@ -61,10 +69,12 @@ object BPlayerCacheStore {
         val task = BPlayerPreloadTask {
             cancelled.set(true)
             cacheWriter?.cancel()
+            _preloadEvents.tryEmit(BPlayerPreloadState.Cancelled(url))
         }
 
         preloadExecutor.execute {
             try {
+                _preloadEvents.tryEmit(BPlayerPreloadState.Started(url, targetBytes))
                 val dataSpec = DataSpec.Builder()
                     .setUri(Uri.parse(url))
                     .setPosition(0L)
@@ -76,12 +86,20 @@ object BPlayerCacheStore {
                     null
                 ) { _, bytesCached, _ ->
                     if (!cancelled.get()) {
-                        onProgress?.invoke(bytesCached.coerceAtMost(targetBytes), targetBytes)
+                        val safeCachedBytes = bytesCached.coerceAtMost(targetBytes)
+                        _preloadEvents.tryEmit(
+                            BPlayerPreloadState.Progress(url, safeCachedBytes, targetBytes)
+                        )
+                        onProgress?.invoke(safeCachedBytes, targetBytes)
                     }
                 }
                 cacheWriter?.cache()
+                if (!cancelled.get()) {
+                    _preloadEvents.tryEmit(BPlayerPreloadState.Completed(url, targetBytes))
+                }
             } catch (throwable: Throwable) {
                 if (!cancelled.get()) {
+                    _preloadEvents.tryEmit(BPlayerPreloadState.Error(url, throwable))
                     onError?.invoke(throwable)
                 }
             }
@@ -131,4 +149,33 @@ class BPlayerPreloadTask internal constructor(
     fun cancel() {
         cancelAction()
     }
+}
+
+sealed class BPlayerPreloadState {
+    abstract val url: String
+
+    data class Started(
+        override val url: String,
+        val targetBytes: Long
+    ) : BPlayerPreloadState()
+
+    data class Progress(
+        override val url: String,
+        val cachedBytes: Long,
+        val targetBytes: Long
+    ) : BPlayerPreloadState()
+
+    data class Completed(
+        override val url: String,
+        val cachedBytes: Long
+    ) : BPlayerPreloadState()
+
+    data class Error(
+        override val url: String,
+        val throwable: Throwable
+    ) : BPlayerPreloadState()
+
+    data class Cancelled(
+        override val url: String
+    ) : BPlayerPreloadState()
 }

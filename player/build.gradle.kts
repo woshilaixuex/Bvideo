@@ -36,6 +36,7 @@ dependencies {
     implementation("androidx.media3:media3-datasource:1.10.0")
     implementation("androidx.media3:media3-ui:1.10.0")
     implementation("androidx.media3:media3-common:1.10.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

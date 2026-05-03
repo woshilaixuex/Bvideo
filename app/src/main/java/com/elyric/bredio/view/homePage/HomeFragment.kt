@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import com.elyric.bredio.view.component.fragment.BaseFragment
 import com.elyric.domain.model.Video
 import com.elyric.nav_api.NavDestination
 import com.elyric.nav_api.NavType
+import com.elyric.bredio.view.component.player.GlobalPlayerViewModel
 import com.elyric.bredio.view.videoPage.VideoFragment
 
 @NavDestination(route = "home_fragment", type = NavType.FRAGMENT, asStart = true)
@@ -23,6 +25,7 @@ class HomeFragment : BaseFragment() {
     val videoViewModel: VideoViewModel by viewModels  {
         VideoViewModel.Factory
     }
+    private val globalPlayerViewModel: GlobalPlayerViewModel by activityViewModels()
 
     override fun initViews() {
         super.initViews()
@@ -60,6 +63,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun openVideoDetail(video: Video) {
+        globalPlayerViewModel.preload(video.playUrl)
         findNavController().navigate(
             VideoFragment.ROUTE.hashCode(),
             VideoFragment.createArgs(video)

@@ -7,13 +7,27 @@
     android:background="@android:color/black"
     tools:context=".view.videoPage.VideoFragment">
 
-    <com.elyric.player.view.BPlayerView
-        android:id="@+id/videoPlayer"
+    <FrameLayout
+        android:id="@+id/playerStage"
         android:layout_width="0dp"
         android:layout_height="240dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.elyric.player.view.BPlayerView
+            android:id="@+id/videoPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/ivVideoCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loading" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvVideoTitle"
@@ -27,7 +41,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/videoPlayer"
+        app:layout_constraintTop_toBottomOf="@id/playerStage"
         tools:text="从零实现类 B 站首页视频卡片布局" />
 
     <TextView
