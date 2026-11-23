@@ -20,6 +20,7 @@ import com.elyric.bredio.view.component.player.GlobalPlayerViewModel
 import com.elyric.domain.model.Video
 import com.elyric.nav_api.NavDestination
 import com.elyric.nav_api.NavType
+import com.elyric.nav_api.TraceTime
 import com.elyric.player.engine.BPlayerPlaybackState
 import kotlinx.coroutines.launch
 
@@ -50,6 +51,7 @@ class VideoFragment : Fragment() {
         return binding.root
     }
 
+    @TraceTime(name = "VideoFragment.onViewCreated")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tvVideoTitle.text = currentVideo.title

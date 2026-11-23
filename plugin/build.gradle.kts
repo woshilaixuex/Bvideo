@@ -42,6 +42,7 @@ publishing {
 dependencies {
     implementation(gradleApi())
     implementation(androidxLibs.bundles.nav.plugin)
+    implementation("org.ow2.asm:asm-commons:9.2")
     implementation(project(":nav-api"))
     implementation("com.google.devtools.ksp:symbol-processing-api:2.2.10-2.0.2")
     testImplementation(libs.junit)

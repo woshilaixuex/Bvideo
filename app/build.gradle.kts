@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
+    id("com.elyric.nav-plugin") version "1.0.3"
 }
 
 android {

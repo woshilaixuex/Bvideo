@@ -14,6 +14,8 @@ import com.elyric.bredio.view.component.fragment.BaseFragment
 import com.elyric.domain.model.Video
 import com.elyric.nav_api.NavDestination
 import com.elyric.nav_api.NavType
+import com.elyric.nav_api.TraceTime
+import com.elyric.bredio.view.component.player.BFirstFrameTracer
 import com.elyric.bredio.view.component.player.GlobalPlayerViewModel
 import com.elyric.bredio.view.videoPage.VideoFragment
 
@@ -62,7 +64,9 @@ class HomeFragment : BaseFragment() {
         super.onDestroyView()
     }
 
+    @TraceTime(name = "HomeFragment.openVideoDetail")
     private fun openVideoDetail(video: Video) {
+        BFirstFrameTracer.start(video.playUrl)
         globalPlayerViewModel.preload(video.playUrl)
         findNavController().navigate(
             VideoFragment.ROUTE.hashCode(),
@@ -77,42 +81,42 @@ class HomeFragment : BaseFragment() {
                 title = "从零实现类 B 站首页视频卡片布局",
                 description = "首页双列推荐流布局演示",
                 coverUrl = "https://picsum.photos/id/1015/800/450",
-                playUrl = "https://www.w3schools.com/html/mov_bbb.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_640x360.mp4"
             ),
             Video(
                 id = "2",
                 title = "Kotlin 开发安卓播放器控制层的思路拆解",
                 description = "播放器控制器封装",
                 coverUrl = "https://picsum.photos/id/1025/800/450",
-                playUrl = "https://www.w3schools.com/html/movie.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4"
             ),
             Video(
                 id = "3",
                 title = "RecyclerView 双列视频流怎么做得更像真实产品",
                 description = "双列 feed 流布局",
                 coverUrl = "https://picsum.photos/id/1043/800/450",
-                playUrl = "https://www.w3schools.com/html/mov_bbb.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_1280x720.mp4"
             ),
             Video(
                 id = "4",
                 title = "Media3 和 ExoPlayer 在项目里的基本接入方式",
                 description = "Media3 基础接入",
                 coverUrl = "https://picsum.photos/id/1060/800/450",
-                playUrl = "https://www.w3schools.com/html/movie.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_1920x1080.mp4"
             ),
             Video(
                 id = "5",
                 title = "首页搜索条、推荐流、点击跳转的完整串联",
                 description = "首页交互串联",
                 coverUrl = "https://picsum.photos/id/1067/800/450",
-                playUrl = "https://www.w3schools.com/html/mov_bbb.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_2560x1440.mp4"
             ),
             Video(
                 id = "6",
                 title = "校招项目里如何把视频播放器讲出亮点",
                 description = "项目包装思路",
                 coverUrl = "https://picsum.photos/id/1074/800/450",
-                playUrl = "https://www.w3schools.com/html/movie.mp4"
+                playUrl = "https://filesamples.com/samples/video/mp4/sample_3840x2160.mp4"
             )
         )
     }

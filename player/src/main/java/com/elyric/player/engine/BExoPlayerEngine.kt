@@ -13,6 +13,7 @@ import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import com.elyric.nav_api.TraceTime
 import com.elyric.player.data.BPlayerCacheStore
 
 @UnstableApi
@@ -94,6 +95,7 @@ class BExoPlayerEngine(context: Context) : BaseVideoPlayerEngine() {
         currentUrl = url
     }
 
+    @TraceTime(name = "BExoPlayerEngine.prepare")
     override fun prepare() {
         val source = currentUrl ?: return
         dispatchPlaybackState(BPlayerPlaybackState.PREPARING)

@@ -40,11 +40,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        WindowInsetsControllerCompat(window, window.decorView).apply {
-            hide(WindowInsetsCompat.Type.systemBars())
-            systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
+        WindowInsetsControllerCompat(window, window.decorView)
+            .show(WindowInsetsCompat.Type.statusBars())
         setupNavigationUI()
     }
 

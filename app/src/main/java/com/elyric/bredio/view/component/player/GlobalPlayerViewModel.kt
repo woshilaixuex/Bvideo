@@ -11,6 +11,7 @@ import com.elyric.player.data.BPlayerCacheStore
 import com.elyric.player.data.BPlayerPreloadState
 import com.elyric.player.data.BPlayerPreloadTask
 import com.elyric.player.view.BPlayerView
+import com.elyric.nav_api.TraceTime
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,10 +29,14 @@ class GlobalPlayerViewModel(application: Application) : AndroidViewModel(applica
     private val playerListener = object : BPlayerListener {
         override fun onPlaybackStateChanged(state: BPlayerPlaybackState) {
             _playbackState.value = state
+            if (state == BPlayerPlaybackState.READY) {
+                BFirstFrameTracer.onReady(currentUrl)
+            }
         }
 
         override fun onPlayerError(message: String?) {
             _playbackState.value = BPlayerPlaybackState.ERROR
+            BFirstFrameTracer.onError(currentUrl, message)
         }
     }
 
@@ -43,11 +48,16 @@ class GlobalPlayerViewModel(application: Application) : AndroidViewModel(applica
         playerController.attach(playerView)
     }
 
+    @TraceTime(name = "GlobalPlayerViewModel.play")
     fun play(playerView: BPlayerView, url: String) {
+        BFirstFrameTracer.onPlayRequested(url)
         playerController.attach(playerView)
         if (currentUrl == url) {
             if (!playerController.isPlaying()) {
                 playerController.start()
+            }
+            if (_playbackState.value == BPlayerPlaybackState.READY) {
+                BFirstFrameTracer.onReady(url)
             }
             return
         }
@@ -55,6 +65,7 @@ class GlobalPlayerViewModel(application: Application) : AndroidViewModel(applica
         playerController.play(url)
     }
 
+    @TraceTime(name = "GlobalPlayerViewModel.preload")
     fun preload(url: String, seconds: Int = DEFAULT_PRELOAD_SECONDS) {
         if (currentPreloadUrl == url) {
             return

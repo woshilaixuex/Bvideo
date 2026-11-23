@@ -2,6 +2,7 @@ package com.elyric.plugin.nav_plugin.model
 
 object PluginInfo {
     const val NAV_DESTINATION_DESCRIPTOR = "Lcom/elyric/nav_api/NavDestination;"
+    const val TRACE_TIME_DESCRIPTOR = "Lcom/elyric/nav_api/TraceTime;"
     const val NAV_DESTINATION_TYPE = "Lcom/elyric/nav_api/NavType;"
     const val KEY_ROUTE = "route"
     const val KEY_TYPE = "type"

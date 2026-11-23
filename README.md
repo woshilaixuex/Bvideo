@@ -92,7 +92,26 @@ globalPlayerViewModel.preload(url)
 ```
 
 默认预加载 5 秒，内部按估算码率换算成字节数，从视频起始位置预取一段数据。该策略适合 progressive MP4 的首帧和起播优化，但不是严格的“下载第 N 秒到第 M 秒”。如果后续接入 HLS/DASH，可以进一步基于分片做更精确的时间段预加载。
+### 预加载策略
 
+```kotlin
+使用缓存首次播放时
+2026-05-04 22:49:09.587  6883-6883  BFirstFrame             com.elyric.bredio                    D  start url=https://www.w3schools.com/html/mov_bbb.mp4
+2026-05-04 22:49:09.587  6883-6883  BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.start cost=0ms
+2026-05-04 22:49:09.653  6883-6883  BFirstFrame             com.elyric.bredio                    D  playRequested url=https://www.w3schools.com/html/mov_bbb.mp4 clickToPlay=66ms
+2026-05-04 22:49:09.653  6883-6883  BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.onPlayRequested cost=0ms
+2026-05-04 22:49:10.503  6883-6883  BFirstFrame             com.elyric.bredio                    D  firstFrameReady url=https://www.w3schools.com/html/mov_bbb.mp4 clickToFirstFrame=916ms playToFirstFrame=850ms
+2026-05-04 22:49:10.503  6883-6883  BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.onReady cost=0ms
+```
+```kotlin
+不使用缓存
+2026-05-04 22:54:38.721 16773-16773 BFirstFrame             com.elyric.bredio                    D  start url=https://www.w3schools.com/html/mov_bbb.mp4
+2026-05-04 22:54:38.721 16773-16773 BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.start cost=0ms
+2026-05-04 22:54:38.779 16773-16773 BFirstFrame             com.elyric.bredio                    D  playRequested url=https://www.w3schools.com/html/mov_bbb.mp4 clickToPlay=58ms
+2026-05-04 22:54:38.779 16773-16773 BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.onPlayRequested cost=1ms
+2026-05-04 22:54:40.882 16773-16773 BFirstFrame             com.elyric.bredio                    D  firstFrameReady url=https://www.w3schools.com/html/mov_bbb.mp4 clickToFirstFrame=2161ms playToFirstFrame=2103ms
+2026-05-04 22:54:40.882 16773-16773 BTraceTime              com.elyric.bredio                    D  BFirstFrameTracer.onReady cost=0ms
+```
 ### 图片缓存
 
 首页封面和播放页兜底封面使用 Glide 加载，并设置：
